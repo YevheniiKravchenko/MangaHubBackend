@@ -1,0 +1,14 @@
+{
+  "Auth": {
+    "Issuer": "authServer",
+    "Audience": "webApi",
+    "Secret": "LkLKinpFN&09hfm94S(*&f9w7e9t8yd9*(*&F(ASdSA8d9sd8f9*989F*&(a*f7",
+    "TokenLifetime": "3600"
+  },
+  "Connection": {
+    "Host": "localhost",
+    "Database": "MangaHub",
+    "Password": "Pas#123456",
+    "ConnectionString": "Host={0}; Database={1}; Username=postgres; Password={2}"
+  }
+}

@@ -1,7 +1,7 @@
 ﻿using Common.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL.Models
+namespace DAL.Infrastructure.Models
 {
     public class RegisterUserModel
     {

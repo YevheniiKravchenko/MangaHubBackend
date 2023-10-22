@@ -3,7 +3,8 @@
     "Issuer": "authServer",
     "Audience": "webApi",
     "Secret": "LkLKinpFN&09hfm94S(*&f9w7e9t8yd9*(*&F(ASdSA8d9sd8f9*989F*&(a*f7",
-    "TokenLifetime": "3600"
+    "TokenLifetime": "3600",
+    "RefreshTokenLifetime": "36000"
   },
   "Connection": {
     "Host": "localhost",

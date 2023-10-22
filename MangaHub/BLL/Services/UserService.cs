@@ -1,0 +1,84 @@
+﻿using AutoMapper;
+using BLL.Contracts;
+using BLL.Infrastructure.Models;
+using Common.Configs;
+using DAL.Contracts;
+using DAL.Infrastructure.Models;
+using Domain.Models;
+
+namespace BLL.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly AuthOptions _authOptions;
+        private readonly Lazy<IUnitOfWork> _unitOfWork;
+        private readonly Lazy<IMapper> _mapper;
+
+        public UserService(
+            AuthOptions authOptions,
+            Lazy<IUnitOfWork> unitOfWork,
+            Lazy<IMapper> mapper)
+        {
+            _authOptions = authOptions;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public Guid CreateRefreshToken(int userId)
+        {
+            return _unitOfWork.Value.Users.Value.CreateRefreshToken(
+                userId,
+                _authOptions.RefreshTokenLifetime
+            );
+        }
+
+        public IEnumerable<UserProfileModel> GetAllUsers(PagingModel pagingModel)
+        {
+            var users = _unitOfWork.Value.Users.Value
+                .GetAll(pagingModel)
+                .ToList();
+
+            var userProfiles = _mapper.Value.Map<List<UserProfileModel>>(users);
+
+            return userProfiles;
+        }
+
+        public int GetUserIdByRefreshToken(Guid refreshToken)
+        {
+            return _unitOfWork.Value.Users.Value.GetUserIdByRefreshToken(refreshToken);
+        }
+
+        public UserProfileModel GetUserProfileById(int userId)
+        {
+            var user = _unitOfWork.Value.Users.Value.GetUserById(userId);
+            var userProfileModel = _mapper.Value.Map<UserProfileModel>(user);
+
+            return userProfileModel;
+        }
+
+        public int LoginUser(string login, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterUser(RegisterUserModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ResetPassword(int userId, Guid guid, string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ResetPasswordRequest(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateUserInfo(UserProfileInfo model)
+        {
+            _unitOfWork.Value.Users.Value.UpdateUserProfileInfo(model);
+        }
+    }
+}

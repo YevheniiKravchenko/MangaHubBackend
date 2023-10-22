@@ -8,7 +8,7 @@ namespace DAL.DbContexts
     {
         public DbSet<User> Users { get; set; } = null!;
 
-        public DbSet<Person> Persons { get; set; } = null!;
+        public DbSet<UserProfile> Profiles { get; set; } = null!;
 
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
@@ -40,12 +40,12 @@ namespace DAL.DbContexts
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<User>()
-                .HasOne(u => u.Person)
+                .HasOne(u => u.UserProfile)
                 .WithOne(p => p.User)
-                .HasForeignKey<Person>(p => p.UserId)
+                .HasForeignKey<UserProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Person>()
+            modelBuilder.Entity<UserProfile>()
                 .HasKey(p => p.UserId);
 
             modelBuilder.Entity<User>()

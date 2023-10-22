@@ -4,8 +4,11 @@ using AutoMapper;
 using Common.Configs;
 using Common.IoC;
 using DAL.DbContexts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -32,12 +35,31 @@ var connection = string.Format(connectionModel.ConnectionString, dbHost, dbName,
 
 builder.Services.AddDbContext<DbContextBase>(options => options.UseNpgsql(connection));
 
+var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
+builder.Services.AddSingleton(authOptions);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = authOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = authOptions.Audience,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = authOptions.SymmetricSecurityKey
+        };
+    });
+
 #region Init Mapper Profiles
 
 var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddMaps(new[] {
         "DAL",
+        "BLL"
     });
 });
 
@@ -50,6 +72,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy(name: MyAllowSpecificOrigins, builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 

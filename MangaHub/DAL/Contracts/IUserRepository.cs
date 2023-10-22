@@ -1,15 +1,15 @@
-﻿using DAL.Models;
+﻿using DAL.Infrastructure.Models;
 using Domain.Models;
 
 namespace DAL.Contracts
 {
     public interface IUserRepository
     {
-        IQueryable<User> GetAll();
+        IQueryable<User> GetAll(PagingModel pagingModel);
 
         User GetUserById(int userId);
 
-        void UpdatePersonInfo(PersonInfo model);
+        void UpdateUserProfileInfo(UserProfileInfo model);
 
         int LoginUser(string login, string password);
 

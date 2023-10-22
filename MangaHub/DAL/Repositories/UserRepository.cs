@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using DAL.Contracts;
 using DAL.DbContexts;
-using DAL.Models;
+using DAL.Infrastructure.Extensions;
+using DAL.Infrastructure.Models;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ namespace DAL.Repositories
         private readonly Lazy<IMapper> _mapper;
 
         private readonly DbSet<User> _users;
-        private readonly DbSet<Person> _persons;
+        private readonly DbSet<UserProfile> _userProfiles;
         private readonly DbSet<RefreshToken> _refreshTokens;
 
         public UserRepository(
@@ -24,7 +25,7 @@ namespace DAL.Repositories
             _mapper = mapper;
 
             _users = dbContext.Users;
-            _persons = dbContext.Persons;
+            _userProfiles = dbContext.Profiles;
             _refreshTokens = dbContext.RefreshTokens;
         }
 
@@ -46,15 +47,17 @@ namespace DAL.Repositories
             return refreshToken.RefreshTokenId;
         }
 
-        public IQueryable<User> GetAll()
+        public IQueryable<User> GetAll(PagingModel pagingModel)
         {
-            return _users.AsQueryable();
+            return _users.AsQueryable()
+                .OrderBy(x => x.RegistrationDate)
+                .GetPage(pagingModel);
         }
 
         public User GetUserById(int userId)
         {
             var user = _users
-                .Include(u => u.Person)
+                .Include(u => u.UserProfile)
                 .FirstOrDefault(u => u.UserId == userId)
                     ?? throw new ArgumentException("INVALID_USERID");
 
@@ -91,12 +94,12 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public void UpdatePersonInfo(PersonInfo model)
+        public void UpdateUserProfileInfo(UserProfileInfo model)
         {
-            var person = _persons.FirstOrDefault(p => p.UserId == model.UserId)
+            var profile = _userProfiles.FirstOrDefault(p => p.UserId == model.UserId)
                 ?? throw new ArgumentException("INVALID_USERID");
 
-            _mapper.Value.Map(model, person);
+            _mapper.Value.Map(model, profile);
             _dbContext.Commit();
         }
     }

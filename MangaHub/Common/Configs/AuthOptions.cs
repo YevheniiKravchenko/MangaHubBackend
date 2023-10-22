@@ -1,5 +1,5 @@
-﻿using Common.Extensions;
-using System.Security.Cryptography;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Common.Configs
 {
@@ -15,5 +15,7 @@ namespace Common.Configs
 
         public int RefreshTokenLifetime { get; set; }
 
+        public SymmetricSecurityKey SymmetricSecurityKey
+            => new(Encoding.ASCII.GetBytes(Secret));
     }
 }

@@ -1,6 +1,6 @@
-﻿using DAL.Models;
+﻿using DAL.Infrastructure.Models;
 
-namespace DAL.Extensions
+namespace DAL.Infrastructure.Extensions
 {
     public static class IEnumerableExtensions
     {

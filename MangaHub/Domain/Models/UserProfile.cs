@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
-    public class Person
+    public class UserProfile
     {
         public int UserId { get; set; }
 

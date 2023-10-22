@@ -27,7 +27,7 @@ namespace Domain.Models
         #region Relations
 
         [JsonIgnore]
-        public Person Person { get; set; }
+        public UserProfile UserProfile { get; set; }
 
         [JsonIgnore]
         public ICollection<RefreshToken> RefreshTokens { get; set; }

@@ -28,7 +28,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Persons",
+                name: "Profiles",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
@@ -43,9 +43,9 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Persons", x => x.UserId);
+                    table.PrimaryKey("PK_Profiles", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Persons_Users_UserId",
+                        name: "FK_Profiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -80,7 +80,7 @@ namespace DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");

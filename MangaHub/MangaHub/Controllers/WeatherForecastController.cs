@@ -25,7 +25,7 @@ namespace MangaHub.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            var users = _unitOfWork.Users.Value.GetAll().ToList();
+            //var users = _unitOfWork.Users.Value.GetAll().ToList();
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

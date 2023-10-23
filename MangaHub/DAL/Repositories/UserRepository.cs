@@ -2,6 +2,7 @@
 using DAL.Contracts;
 using DAL.DbContexts;
 using DAL.Infrastructure.Extensions;
+using DAL.Infrastructure.Helpers;
 using DAL.Infrastructure.Models;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -31,20 +32,32 @@ namespace DAL.Repositories
 
         public Guid CreateRefreshToken(int userId, int shiftInSeconds)
         {
-            _refreshTokens.RemoveRange(
-                _refreshTokens.Where(x => x.UserId == userId)
-            );
-            _dbContext.Commit();
+            using var scope = _dbContext.Database.BeginTransaction();
 
-            var refreshToken = new RefreshToken()
+            try
             {
-                UserId = userId,
-                ExpiresOnUtc = DateTime.UtcNow.AddSeconds(shiftInSeconds)
-            };
-            _refreshTokens.Add(refreshToken);
-            _dbContext.Commit();
+                _refreshTokens.RemoveRange(
+                    _refreshTokens.Where(x => x.UserId == userId)
+                );
+                _dbContext.Commit();
 
-            return refreshToken.RefreshTokenId;
+                var refreshToken = new RefreshToken()
+                {
+                    UserId = userId,
+                    ExpiresOnUtc = DateTime.UtcNow.AddSeconds(shiftInSeconds)
+                };
+                _refreshTokens.Add(refreshToken);
+                _dbContext.Commit();
+
+                scope.Commit();
+
+                return refreshToken.RefreshTokenId;
+            }
+            catch (Exception ex)
+            {
+                scope.Rollback();
+                throw new Exception(ex.Message);
+            }
         }
 
         public IQueryable<User> GetAll(PagingModel pagingModel)
@@ -64,24 +77,63 @@ namespace DAL.Repositories
             return user;
         }
 
-        public int GetUserIdByRefreshToken(Guid refreshToken)
+        public User GetUserByRefreshToken(Guid refreshToken)
         {
             var token = _refreshTokens.FirstOrDefault(x =>
                 x.RefreshTokenId == refreshToken
                 && x.ExpiresOnUtc >= DateTime.UtcNow
             ) ?? throw new ArgumentException("INVALID_REFRESH_TOKEN");
 
-            return token.UserId;
+            var user = _users.FirstOrDefault(x => x.UserId == token.UserId)
+                ?? throw new ArgumentException("INVALID_USERID");
+
+            return user;
         }
 
-        public int LoginUser(string login, string password)
+        public User LoginUser(string login, string password)
         {
-            throw new NotImplementedException();
+            var user = _users.FirstOrDefault(x => x.Login == login);
+
+            if (user is null
+                || !HashHelper.VerifyPassword(password, user.PasswordSalt, user.PasswordHash))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return user;
         }
 
         public void RegisterUser(RegisterUserModel model)
         {
-            throw new NotImplementedException();
+            using var scope = _dbContext.Database.BeginTransaction();
+
+            try
+            {
+                //TODO Think about unique email
+                if (_users.Any(x => x.Login == model.Login))
+                    throw new ArgumentException("LOGIN_EXISTS");
+
+                var (salt, passwordHash) = HashHelper.GenerateNewPasswordHash(model.Password);
+                var user = _mapper.Value.Map<User>(model);
+                var userProfile = _mapper.Value.Map<UserProfile>(model);
+                if (userProfile.Avatar == null)
+                    userProfile.Avatar = Array.Empty<byte>();
+
+                user.PasswordSalt = salt;
+                user.PasswordHash = passwordHash;
+                user.RegistrationDate = DateTime.UtcNow;
+                user.UserProfile = userProfile;
+
+                _users.Add(user);
+                _dbContext.Commit();
+
+                scope.Commit();
+            }
+            catch (Exception ex)
+            {
+                scope.Rollback();
+                throw new Exception(ex.Message);
+            }
         }
 
         public void ResetPassword(int userId, Guid guid, string newPassword)
@@ -96,11 +148,23 @@ namespace DAL.Repositories
 
         public void UpdateUserProfileInfo(UserProfileInfo model)
         {
-            var profile = _userProfiles.FirstOrDefault(p => p.UserId == model.UserId)
+            using var scope = _dbContext.Database.BeginTransaction();
+
+            try
+            {
+                var profile = _userProfiles.FirstOrDefault(p => p.UserId == model.UserId)
                 ?? throw new ArgumentException("INVALID_USERID");
 
-            _mapper.Value.Map(model, profile);
-            _dbContext.Commit();
+                _mapper.Value.Map(model, profile);
+                _dbContext.Commit();
+
+                scope.Commit();
+            }
+            catch (Exception ex)
+            {
+                scope.Rollback();
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

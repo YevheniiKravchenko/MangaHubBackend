@@ -18,6 +18,9 @@ namespace BLL.Infrastructure.Automapper
                 .ForMember(dst => dst.BirthDate, opt => opt.MapFrom(src => src.UserProfile.BirthDate))
                 .ForMember(dst => dst.Email, opt => opt.MapFrom(src => src.UserProfile.Email))
                 .ReverseMap();
+
+            CreateMap<User, UserModel>()
+                .ReverseMap();
         }
     }
 }

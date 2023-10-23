@@ -1,5 +1,6 @@
 using DAL.Contracts;
 using DAL.DbContexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MangaHub.Controllers
@@ -14,19 +15,16 @@ namespace MangaHub.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IUnitOfWork unitOfWork)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<WeatherForecast> Get()
         {
-            //var users = _unitOfWork.Users.Value.GetAll().ToList();
-
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),

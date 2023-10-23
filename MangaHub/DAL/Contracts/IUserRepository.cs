@@ -11,7 +11,7 @@ namespace DAL.Contracts
 
         void UpdateUserProfileInfo(UserProfileInfo model);
 
-        int LoginUser(string login, string password);
+        User LoginUser(string login, string password);
 
         void RegisterUser(RegisterUserModel model);
 
@@ -21,6 +21,6 @@ namespace DAL.Contracts
 
         Guid CreateRefreshToken(int userId, int shiftInSeconds);
 
-        int GetUserIdByRefreshToken(Guid refreshToken);
+        User GetUserByRefreshToken(Guid refreshToken);
     }
 }

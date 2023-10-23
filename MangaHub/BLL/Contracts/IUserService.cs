@@ -11,7 +11,7 @@ namespace BLL.Contracts
 
         void UpdateUserInfo(UserProfileInfo model);
 
-        int LoginUser(string login, string password);
+        UserModel LoginUser(string login, string password);
 
         void RegisterUser(RegisterUserModel model);
 
@@ -21,6 +21,6 @@ namespace BLL.Contracts
 
         Guid CreateRefreshToken(int userId);
 
-        int GetUserIdByRefreshToken(Guid refreshToken);
+        UserModel GetUserByRefreshToken(Guid refreshToken);
     }
 }

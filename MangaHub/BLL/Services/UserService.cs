@@ -4,7 +4,6 @@ using BLL.Infrastructure.Models;
 using Common.Configs;
 using DAL.Contracts;
 using DAL.Infrastructure.Models;
-using Domain.Models;
 
 namespace BLL.Services
 {
@@ -43,9 +42,12 @@ namespace BLL.Services
             return userProfiles;
         }
 
-        public int GetUserIdByRefreshToken(Guid refreshToken)
+        public UserModel GetUserByRefreshToken(Guid refreshToken)
         {
-            return _unitOfWork.Value.Users.Value.GetUserIdByRefreshToken(refreshToken);
+            var user = _unitOfWork.Value.Users.Value.GetUserByRefreshToken(refreshToken);
+            var userModel = _mapper.Value.Map<UserModel>(user);
+
+            return userModel;
         }
 
         public UserProfileModel GetUserProfileById(int userId)
@@ -56,14 +58,17 @@ namespace BLL.Services
             return userProfileModel;
         }
 
-        public int LoginUser(string login, string password)
+        public UserModel LoginUser(string login, string password)
         {
-            throw new NotImplementedException();
+            var user = _unitOfWork.Value.Users.Value.LoginUser(login, password);
+            var userModel = _mapper.Value.Map<UserModel>(user);
+
+            return userModel;
         }
 
         public void RegisterUser(RegisterUserModel model)
         {
-            throw new NotImplementedException();
+            _unitOfWork.Value.Users.Value.RegisterUser(model);
         }
 
         public void ResetPassword(int userId, Guid guid, string newPassword)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL.Infrastructure.Models;
+using Domain.Models;
 
 namespace DAL.Infrastructure.Automapper
 {
@@ -8,6 +9,12 @@ namespace DAL.Infrastructure.Automapper
         public UserProfile()
         {
             CreateMap<UserProfileInfo, Domain.Models.UserProfile>()
+                .ReverseMap();
+
+            CreateMap<RegisterUserModel, User>()
+                .ReverseMap();
+
+            CreateMap<RegisterUserModel, Domain.Models.UserProfile>()
                 .ReverseMap();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using BLL.Contracts;
+using BLL.Infrastructure.Models;
 using Common.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -25,29 +26,43 @@ namespace MangaHub.Controllers.IdentityServer
             _userService = userService;
         }
 
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginModel model)
+        {
+            var userId = _userService.LoginUser(model.Login, model.Password);
+            var token = GetToken(userId);
+
+            return Ok(token);
+        }
+
         [HttpGet("refresh")]
         public ActionResult Refresh([FromHeader] string refreshTokenString)
         {
             var refreshToken = refreshTokenString.DecodeToken();
-            var userId = _userService.GetUserIdByRefreshToken(refreshToken);
-            var token = GetToken(userId);
+            var user = _userService.GetUserByRefreshToken(refreshToken);
+            var token = GetToken(user);
 
             return Ok(token);
         }
 
         #region Helpers
 
-        private Token GetToken(int userId)
+        private Token GetToken(UserModel user)
         {
             var authParams = _authOptions;
             var securityKey = authParams.SymmetricSecurityKey;
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var userRole = user.IsAdmin
+                ? "Admin"
+                : "User";
+
             var jwtToken = new JwtSecurityToken(
                 authParams.Issuer,
                 authParams.Audience,
                 new List<Claim>() {
-                    new Claim("id", userId.ToString()),
+                    new Claim("id", user.UserId.ToString()),
+                    new Claim(ClaimTypes.Role, userRole),
                 },
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifetime),
                 signingCredentials: credentials
@@ -56,7 +71,7 @@ namespace MangaHub.Controllers.IdentityServer
             var token = new Token()
             {
                 AccessToken = tokenString,
-                RefreshToken = _userService.CreateRefreshToken(userId).EncodeToken()
+                RefreshToken = _userService.CreateRefreshToken(user.UserId).EncodeToken()
             };
 
             return token;

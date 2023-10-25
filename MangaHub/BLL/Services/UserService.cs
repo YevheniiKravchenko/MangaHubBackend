@@ -71,19 +71,19 @@ namespace BLL.Services
             _unitOfWork.Value.Users.Value.RegisterUser(model);
         }
 
-        public void ResetPassword(int userId, Guid guid, string newPassword)
+        public void ResetPassword(ResetPasswordModel resetPasswordModel)
         {
-            throw new NotImplementedException();
-        }
-
-        public void ResetPasswordRequest(int userId)
-        {
-            throw new NotImplementedException();
+            _unitOfWork.Value.Users.Value.ResetPassword(resetPasswordModel.Token, resetPasswordModel.Password);
         }
 
         public void UpdateUserInfo(UserProfileInfo model)
         {
             _unitOfWork.Value.Users.Value.UpdateUserProfileInfo(model);
+        }
+        
+        public bool IsResetPasswordTokenValid(string token)
+        {
+            return _unitOfWork.Value.Users.Value.IsResetPasswordTokenValid(token);
         }
     }
 }

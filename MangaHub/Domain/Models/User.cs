@@ -32,6 +32,9 @@ namespace Domain.Models
         [JsonIgnore]
         public ICollection<RefreshToken> RefreshTokens { get; set; }
 
+        [JsonIgnore]
+        public ICollection<ResetPasswordToken> ResetPasswordTokens { get; set; }
+
         #endregion
     }
 }

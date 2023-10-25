@@ -56,6 +56,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+var emailCreds = builder.Configuration.GetSection("EmailCreds").Get<EmailCreds>();
+builder.Services.AddSingleton(emailCreds);
+
 #region Init Mapper Profiles
 
 var mapperConfig = new MapperConfiguration(cfg =>

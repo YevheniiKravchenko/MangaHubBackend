@@ -15,12 +15,16 @@ namespace DAL.Contracts
 
         void RegisterUser(RegisterUserModel model);
 
-        void ResetPasswordRequest(int userId);
-
-        void ResetPassword(int userId, Guid guid, string newPassword);
+        void ResetPassword(string token, string newPassword);
 
         Guid CreateRefreshToken(int userId, int shiftInSeconds);
 
         User GetUserByRefreshToken(Guid refreshToken);
+
+        User GetUserByEmail(string email);
+
+        bool IsResetPasswordTokenValid(string token);
+
+        string GenerateResetPasswordToken(int userId);
     }
 }

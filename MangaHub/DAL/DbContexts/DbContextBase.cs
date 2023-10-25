@@ -12,10 +12,12 @@ namespace DAL.DbContexts
 
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
+        public DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; } = null!;
+
         public DbContextBase(DbContextOptions<DbContextBase> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         public void Commit()
@@ -56,6 +58,15 @@ namespace DAL.DbContexts
 
             modelBuilder.Entity<RefreshToken>()
                 .Property(x => x.RefreshTokenId)
+                .HasValueGenerator(typeof(GuidValueGenerator));
+
+            modelBuilder.Entity<User>()
+                .HasMany(x => x.ResetPasswordTokens)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ResetPasswordToken>()
+                .Property(x => x.ResetPasswordTokenId)
                 .HasValueGenerator(typeof(GuidValueGenerator));
         }
 

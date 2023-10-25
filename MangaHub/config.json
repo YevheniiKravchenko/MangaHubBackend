@@ -11,5 +11,11 @@
     "Database": "MangaHub",
     "Password": "Pas#123456",
     "ConnectionString": "Host={0}; Database={1}; Username=postgres; Password={2}"
+  },
+  "EmailCreds": {
+    "EmailHost": "smtp.gmail.com",
+    "EmailUserName": "noreplymangahub@gmail.com",
+    "EmailPassword": "gozr odfg jycg cnsa",
+    "ResetPasswordUrl": "https://localhost:7142/api/User/request-reset-password?token={0}"
   }
 }

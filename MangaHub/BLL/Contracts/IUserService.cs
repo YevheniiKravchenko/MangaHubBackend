@@ -15,12 +15,12 @@ namespace BLL.Contracts
 
         void RegisterUser(RegisterUserModel model);
 
-        void ResetPasswordRequest(int userId);
-
-        void ResetPassword(int userId, Guid guid, string newPassword);
+        void ResetPassword(ResetPasswordModel resetPasswordModel);
 
         Guid CreateRefreshToken(int userId);
 
         UserModel GetUserByRefreshToken(Guid refreshToken);
+
+        bool IsResetPasswordTokenValid(string token);
     }
 }

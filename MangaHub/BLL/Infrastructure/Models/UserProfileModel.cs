@@ -23,5 +23,7 @@
         public string Login { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

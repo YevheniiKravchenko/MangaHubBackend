@@ -65,7 +65,8 @@ namespace DAL.Repositories
 
         public IQueryable<User> GetAll(PagingModel pagingModel)
         {
-            return _users.AsQueryable()
+            return _users.Include(u => u.UserProfile)
+                .AsQueryable()
                 .OrderBy(x => x.RegistrationDate)
                 .GetPage(pagingModel);
         }
@@ -115,6 +116,9 @@ namespace DAL.Repositories
                 //TODO Think about unique email
                 if (_users.Any(x => x.Login == model.Login))
                     throw new ArgumentException("LOGIN_EXISTS");
+
+                if (_users.Any(x => x.UserProfile.Email == model.Email))
+                    throw new ArgumentException("EMAIL_EXISTS");
 
                 var (salt, passwordHash) = HashHelper.GenerateNewPasswordHash(model.Password);
                 var user = _mapper.Value.Map<User>(model);
@@ -238,6 +242,15 @@ namespace DAL.Repositories
                 scope.Rollback();
                 throw;
             }
+        }
+
+        public void SetIsAdminValueForUser(int userId, bool isAdmin)
+        {
+            var user = GetUserById(userId);
+
+            user.IsAdmin = isAdmin;
+
+            _dbContext.Commit();
         }
 
         private string CreateRandomToken()

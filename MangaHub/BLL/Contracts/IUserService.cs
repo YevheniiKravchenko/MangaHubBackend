@@ -22,5 +22,7 @@ namespace BLL.Contracts
         UserModel GetUserByRefreshToken(Guid refreshToken);
 
         bool IsResetPasswordTokenValid(string token);
+
+        void SetIsAdminValueForUser(int userId, bool isAdmin);
     }
 }

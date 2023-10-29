@@ -26,5 +26,7 @@ namespace DAL.Contracts
         bool IsResetPasswordTokenValid(string token);
 
         string GenerateResetPasswordToken(int userId);
+
+        void SetIsAdminValueForUser(int userId, bool isAdmin);
     }
 }

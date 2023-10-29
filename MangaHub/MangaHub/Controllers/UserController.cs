@@ -1,7 +1,9 @@
 ﻿using BLL.Contracts;
 using BLL.Infrastructure.Models;
 using DAL.Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Infrastructure.Models;
 
 namespace WebAPI.Controllers
 {
@@ -23,15 +25,21 @@ namespace WebAPI.Controllers
         [HttpPost("register")]
         public ActionResult Register([FromBody]RegisterUserModel registerModel)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _userService.Value.RegisterUser(registerModel);
 
             return Ok();
         }
 
         [HttpPost("forgot-password")]
-        public ActionResult ForgotPassword([FromBody]string email)
+        public ActionResult ForgotPassword([FromBody]ForgotPasswordModel forgotPassword)
         {
-            _emailService.Value.SendResetPasswordEmail(email);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _emailService.Value.SendResetPasswordEmail(forgotPassword.Email);
 
             return Ok();
         }
@@ -44,7 +52,7 @@ namespace WebAPI.Controllers
             if (isTokenValid)
                 return Ok();
 
-            return BadRequest();
+            return BadRequest("Invalid reset password token");
         }
 
         [HttpPost("reset-password")]
@@ -54,6 +62,33 @@ namespace WebAPI.Controllers
                 return BadRequest(ModelState);
 
             _userService.Value.ResetPassword(resetPasswordModel);
+
+            return Ok();
+        }
+
+        [HttpGet("get-all")]
+        [Authorize]
+        public ActionResult GetAll(PagingModel paging)
+        {
+            var users = _userService.Value.GetAllUsers(paging);
+
+            return Ok(users);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult GetUserProfileById(int userId)
+        {
+            var user = _userService.Value.GetUserProfileById(userId);
+
+            return Ok(user);
+        }
+
+        [HttpPost("set-isadmin-value")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult SetIsAdminValueForUser(int userId, bool isAdmin)
+        {
+            _userService.Value.SetIsAdminValueForUser(userId, isAdmin);
 
             return Ok();
         }

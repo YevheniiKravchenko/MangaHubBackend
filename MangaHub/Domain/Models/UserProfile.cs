@@ -26,6 +26,8 @@ namespace Domain.Models
         public string Description { get; set; }
 
         [Required]
+        [RegularExpression(RegularExpressions.PhoneNumber,
+            ErrorMessage = "Invalid phone number")]
         public string PhoneNumber { get; set; }
 
         public bool ShowConfidentialInformation { get; set; }
@@ -35,6 +37,7 @@ namespace Domain.Models
 
         [Required]
         [MinLength(ValidationConstant.EmailMinLength)]
+        [EmailAddress]
         public string Email { get; set; }
 
         #region Relations

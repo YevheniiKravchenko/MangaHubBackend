@@ -85,5 +85,10 @@ namespace BLL.Services
         {
             return _unitOfWork.Value.Users.Value.IsResetPasswordTokenValid(token);
         }
+
+        public void SetIsAdminValueForUser(int userId, bool isAdmin)
+        {
+            _unitOfWork.Value.Users.Value.SetIsAdminValueForUser(userId, isAdmin);
+        }
     }
 }

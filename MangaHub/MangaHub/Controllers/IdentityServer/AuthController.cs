@@ -29,6 +29,9 @@ namespace MangaHub.Controllers.IdentityServer
         [HttpPost("login")]
         public ActionResult Login([FromBody] LoginModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var userId = _userService.LoginUser(model.Login, model.Password);
             var token = GetToken(userId);
 

@@ -96,7 +96,8 @@ namespace DAL.Repositories
 
         public User LoginUser(string login, string password)
         {
-            var user = _users.FirstOrDefault(x => x.Login == login);
+            var user = _users.FirstOrDefault(x => x.Login == login
+                || x.UserProfile.Email == login);
 
             if (user is null
                 || !HashHelper.VerifyPassword(password, user.PasswordSalt, user.PasswordHash))

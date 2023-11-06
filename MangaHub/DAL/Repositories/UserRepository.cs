@@ -114,7 +114,6 @@ namespace DAL.Repositories
 
             try
             {
-                //TODO Think about unique email
                 if (_users.Any(x => x.Login == model.Login))
                     throw new ArgumentException("LOGIN_EXISTS");
 

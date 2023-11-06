@@ -27,7 +27,7 @@ namespace MangaHub.Controllers.IdentityServer
         }
 
         [HttpPost("login")]
-        public ActionResult Login([FromBody] LoginModel model)
+        public ActionResult Login([FromBody]LoginModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -39,7 +39,7 @@ namespace MangaHub.Controllers.IdentityServer
         }
 
         [HttpGet("refresh")]
-        public ActionResult Refresh([FromHeader] string refreshTokenString)
+        public ActionResult Refresh([FromHeader]string refreshTokenString)
         {
             var refreshToken = refreshTokenString.DecodeToken();
             var user = _userService.GetUserByRefreshToken(refreshToken);

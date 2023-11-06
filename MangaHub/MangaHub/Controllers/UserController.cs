@@ -3,6 +3,7 @@ using BLL.Infrastructure.Models;
 using DAL.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Infrastructure.Extensions;
 using WebAPI.Infrastructure.Models;
 
 namespace WebAPI.Controllers
@@ -45,7 +46,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("request-reset-password")]
-        public ActionResult RequestResetPassword(string token)
+        public ActionResult RequestResetPassword([FromQuery]string token)
         {
             var isTokenValid = _userService.Value.IsResetPasswordTokenValid(token);
 
@@ -56,7 +57,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("reset-password")]
-        public ActionResult ResetPassword(ResetPasswordModel resetPasswordModel)
+        public ActionResult ResetPassword([FromBody]ResetPasswordModel resetPasswordModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -67,8 +68,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get-all")]
-        [Authorize]
-        public ActionResult GetAll(PagingModel paging)
+        [Authorize(Roles = "Admin")]
+        public ActionResult GetAll([FromQuery]PagingModel paging)
         {
             var users = _userService.Value.GetAllUsers(paging);
 
@@ -77,8 +78,12 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult GetUserProfileById(int userId)
+        public ActionResult GetUserProfileById([FromQuery]int userId)
         {
+            var authUserId = this.GetCurrentUserId();
+            if (!HttpContext.User.IsInRole("Admin") && authUserId != userId)
+                return Forbid();
+
             var user = _userService.Value.GetUserProfileById(userId);
 
             return Ok(user);
@@ -86,9 +91,9 @@ namespace WebAPI.Controllers
 
         [HttpPost("set-isadmin-value")]
         [Authorize(Roles = "Admin")]
-        public ActionResult SetIsAdminValueForUser(int userId, bool isAdmin)
+        public ActionResult SetIsAdminValueForUser([FromBody]SetIsAdminValueForUserModel model)
         {
-            _userService.Value.SetIsAdminValueForUser(userId, isAdmin);
+            _userService.Value.SetIsAdminValueForUser(model.UserId, model.IsAdmin);
 
             return Ok();
         }

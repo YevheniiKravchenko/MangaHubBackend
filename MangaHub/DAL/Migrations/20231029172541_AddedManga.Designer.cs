@@ -3,6 +3,7 @@ using System;
 using DAL.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DbContextBase))]
-    partial class DbContextBaseModelSnapshot : ModelSnapshot
+    [Migration("20231029172541_AddedManga")]
+    partial class AddedManga
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,13 +74,7 @@ namespace DAL.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<int>("Genre")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ReleasedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Title")
@@ -86,12 +82,7 @@ namespace DAL.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("MangaId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Mangas");
                 });
@@ -201,7 +192,7 @@ namespace DAL.Migrations
                             Login = "Admin",
                             PasswordHash = "$2a$10$WkrWKFdubfRwcY4MjdFELui7Dh8r3ykAvDYOQPvQud0vPlxFHVen.",
                             PasswordSalt = "d!W2~4~zI{wq:l<p",
-                            RegistrationDate = new DateTime(2023, 10, 29, 18, 21, 54, 733, DateTimeKind.Utc).AddTicks(3248)
+                            RegistrationDate = new DateTime(2023, 10, 29, 17, 25, 41, 525, DateTimeKind.Utc).AddTicks(2523)
                         });
                 });
 
@@ -272,16 +263,6 @@ namespace DAL.Migrations
                     b.Navigation("Manga");
                 });
 
-            modelBuilder.Entity("Domain.Models.Manga", b =>
-                {
-                    b.HasOne("Domain.Models.User", "User")
-                        .WithMany("Mangas")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Models.Rating", b =>
                 {
                     b.HasOne("Domain.Models.Manga", "Manga")
@@ -342,8 +323,6 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Domain.Models.User", b =>
                 {
-                    b.Navigation("Mangas");
-
                     b.Navigation("Ratings");
 
                     b.Navigation("RefreshTokens");

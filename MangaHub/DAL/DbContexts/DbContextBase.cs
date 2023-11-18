@@ -14,6 +14,12 @@ namespace DAL.DbContexts
 
         public DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; } = null!;
 
+        public DbSet<Manga> Mangas { get; set; } = null!;
+
+        public DbSet<Chapter> Chapters { get; set; }
+
+        public DbSet<Rating> Ratings { get; set; } = null!;
+
         public DbContextBase(DbContextOptions<DbContextBase> options)
             : base(options)
         {
@@ -28,6 +34,7 @@ namespace DAL.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             MapUser(modelBuilder);
+            MapManga(modelBuilder);
             AddAdmin(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
@@ -68,6 +75,41 @@ namespace DAL.DbContexts
             modelBuilder.Entity<ResetPasswordToken>()
                 .Property(x => x.ResetPasswordTokenId)
                 .HasValueGenerator(typeof(GuidValueGenerator));
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Ratings)
+                .WithOne(r => r.User)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Mangas)
+                .WithOne(m => m.User)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
+
+        public void MapManga(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Manga>()
+                .Property(m => m.MangaId)
+                .HasValueGenerator(typeof(GuidValueGenerator));
+
+            modelBuilder.Entity<Chapter>()
+                .Property(c => c.ChapterId)
+                .HasValueGenerator(typeof(GuidValueGenerator));
+
+            modelBuilder.Entity<Rating>()
+                .Property(c => c.RatingId)
+                .HasValueGenerator(typeof(GuidValueGenerator));
+
+            modelBuilder.Entity<Manga>()
+                .HasMany(m => m.Chapters)
+                .WithOne(c => c.Manga)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Manga>()
+                .HasMany(m => m.Ratings)
+                .WithOne(r => r.Manga)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void AddAdmin(ModelBuilder modelBuidler)

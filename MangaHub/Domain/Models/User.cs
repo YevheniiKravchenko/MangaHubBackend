@@ -37,6 +37,12 @@ namespace Domain.Models
         [JsonIgnore]
         public ICollection<ResetPasswordToken> ResetPasswordTokens { get; set; }
 
+        [JsonIgnore]
+        public ICollection<Manga> Mangas { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Rating> Ratings { get; set; }
+
         #endregion
     }
 }

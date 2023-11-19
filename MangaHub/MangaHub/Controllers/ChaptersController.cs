@@ -1,5 +1,6 @@
 ﻿using BLL.Contracts;
 using BLL.Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Infrastructure.Extensions;
 
@@ -7,6 +8,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ChaptersController : ControllerBase
     {
         private readonly IChapterService _chapterService;

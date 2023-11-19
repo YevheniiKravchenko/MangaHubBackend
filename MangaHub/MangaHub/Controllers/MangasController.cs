@@ -1,8 +1,7 @@
 ﻿using BLL.Contracts;
 using BLL.Infrastructure.Models;
-using BLL.Services;
 using DAL.Infrastructure.Models;
-using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Infrastructure.Extensions;
 
@@ -10,6 +9,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MangasController : ControllerBase
     {
         private readonly IMangaService _mangaService;

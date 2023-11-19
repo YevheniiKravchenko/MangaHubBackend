@@ -97,5 +97,18 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPost("update-user-profile")]
+        [Authorize]
+        public ActionResult UpdateUserProfile([FromBody] UserProfileInfo userProfileInfo)
+        {
+            var authUserId = this.GetCurrentUserId();
+            if (!HttpContext.User.IsInRole("Admin") && authUserId != userProfileInfo.UserId)
+                return Forbid();
+
+            _userService.Value.UpdateUserInfo(userProfileInfo);
+
+            return Ok();
+        }
     }
 }

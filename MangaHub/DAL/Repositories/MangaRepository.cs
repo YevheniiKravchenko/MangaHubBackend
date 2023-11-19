@@ -105,5 +105,16 @@ namespace DAL.Repositories
 
             _dbContext.Commit();
         }
+
+        public void UploadCoverImage(byte[] imageBytes, Guid mangaId)
+        {
+            var manga = GetById(mangaId);
+
+            manga.CoverImage = imageBytes;
+            manga.LastUpdatedOn = DateTime.Now;
+
+            _mangas.Update(manga);
+            _dbContext.Commit();
+        }
     }
 }

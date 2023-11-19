@@ -16,5 +16,7 @@ namespace DAL.Contracts
         void Delete(Guid mangaId);
 
         void SetRating(Guid mangaId, int userId, int mark);
+
+        void UploadCoverImage(byte[] imageBytes, Guid mangaId);
     }
 }

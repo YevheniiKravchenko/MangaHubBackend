@@ -1,16 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Infrastructure.Extensions;
-
-public static class ControllerExtensions
+namespace WebAPI.Infrastructure.Extensions
 {
-    public static int GetCurrentUserId(this ControllerBase controller)
+    public static class ControllerExtensions
     {
-        var userIdString = controller.HttpContext.User.FindFirst("id")
-            ?.Value ?? "-1";
+        public static async Task<byte[]> GetFileBytes(this ControllerBase controller, IFormFile file)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                var fileData = memoryStream.ToArray();
 
-        var userId = int.Parse(userIdString);
+                return fileData;
+            }
+        }
+        
+        public static int GetCurrentUserId(this ControllerBase controller)
+		{
+        	var userIdString = controller.HttpContext.User.FindFirst("id")
+            	?.Value ?? "-1";
 
-        return userId;
+        	var userId = int.Parse(userIdString);
+
+    		return userId;
+
+    	}
     }
 }

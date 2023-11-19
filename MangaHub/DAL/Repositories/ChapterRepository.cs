@@ -66,5 +66,16 @@ namespace DAL.Repositories
 
             return chapter;
         }
+
+        public void UploadChapter(byte[] chapterData, Guid chapterId)
+        {
+            var chapter = GetById(chapterId);
+
+            chapter.Scans = chapterData;
+            chapter.LastUpdatedOn = DateTime.Now;
+
+            _chapters.Update(chapter);
+            _dbContext.Commit();
+        }
     }
 }

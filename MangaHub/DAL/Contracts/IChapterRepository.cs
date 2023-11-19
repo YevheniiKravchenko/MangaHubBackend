@@ -11,5 +11,7 @@ namespace DAL.Contracts
         void Delete(Guid chapterId);
 
         void Apply(Chapter chapter);
+
+        void UploadChapter(byte[] chapterData, Guid chapterId);
     }
 }

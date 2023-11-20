@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+  workflow_dispatch:
+
+env:
+  SOLUTION_PATH : ./MangaHub/MangaHub.sln
+  AZURE_PACKAGE_NAME : ./publish
+  AZURE_APP_NAME : MangaHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3.2.0
+        with:
+          dotnet-version: '6.0'
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish ${{ env.SOLUTION_PATH }} --configuration Release --no-build --output ${{ env.AZURE_PACKAGE_NAME }}
+
+      - name: Deployment
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_PACKAGE_NAME }}

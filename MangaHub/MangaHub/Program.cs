@@ -35,6 +35,7 @@ var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? conn
 
 var connection = string.Format(connectionModel.ConnectionString, dbHost, dbName, dbPassword);
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<DbContextBase>(options => options.UseNpgsql(connection));
 
 var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();

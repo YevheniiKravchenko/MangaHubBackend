@@ -13,13 +13,33 @@ namespace BLL.Infrastructure.Automapper
 
             CreateMap<Manga, MangaListItem>()
                 .ForMember(dst => dst.Genre, opt => opt.MapFrom(src => src.Genre.ToString()))
-                .ForMember(dst => dst.Rating, opt => opt.MapFrom(src => src.Ratings.Average(r => r.Mark)));
+                .ForMember
+                (
+                    dst => dst.Rating, 
+                    opt => opt.MapFrom(src => src.Ratings.Any() 
+                        ? src.Ratings.Average(r => r.Mark) 
+                        : 0)
+                );
 
             CreateMap<Manga, MangaModel>()
-                .ForMember(dst => dst.Genre, opt => opt.MapFrom(src => (Genre)src.Genre))
-                .ForMember(dst => dst.Rating, opt => opt.MapFrom(src => src.Ratings.Average(r => r.Mark)))
+                .ForMember
+                (
+                    dst => dst.Genre, 
+                    opt => opt.MapFrom(src => (Genre)src.Genre)
+                )
+                .ForMember
+                (
+                    dst => dst.Rating, 
+                    opt => opt.MapFrom(src => src.Ratings.Any() 
+                        ? src.Ratings.Average(r => r.Mark) 
+                        : 0)
+                )
                 .ReverseMap()
-                .ForMember(dst => dst.Genre, opt => opt.MapFrom(src => (int)src.Genre));
+                .ForMember
+                (
+                    dst => dst.Genre, 
+                    opt => opt.MapFrom(src => (int)src.Genre)
+                );
 
             #endregion Manga
 

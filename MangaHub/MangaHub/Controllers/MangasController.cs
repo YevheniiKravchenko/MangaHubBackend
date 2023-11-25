@@ -4,6 +4,7 @@ using DAL.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Infrastructure.Extensions;
+using WebAPI.Infrastructure.Models;
 
 namespace WebAPI.Controllers
 {
@@ -28,7 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get-all-filter")]
-        public ActionResult GetAll(MangaFilter filter)
+        public ActionResult GetAll([FromQuery] MangaFilter filter)
         {
             var mangas = _mangaService.GetAll(filter);
 
@@ -36,7 +37,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetById(Guid mangaId)
+        public ActionResult GetById([FromQuery] Guid mangaId)
         {
             var manga = _mangaService.GetById(mangaId);
 
@@ -44,7 +45,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Apply(MangaModel mangaModel)
+        public ActionResult Apply([FromBody] MangaModel mangaModel)
         {
             _mangaService.Apply(mangaModel);
 
@@ -52,7 +53,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete(Guid mangaId)
+        public ActionResult Delete([FromQuery] Guid mangaId)
         {
             _mangaService.Delete(mangaId);
 
@@ -60,24 +61,26 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("set-rating")]
-        public ActionResult SetRating(Guid mangaId, int userId, int mark)
+        public ActionResult SetRating([FromBody] SetRatingModel model)
         {
-            _mangaService.SetRating(mangaId, userId, mark);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _mangaService.SetRating(model.MangaId, model.UserId, model.Mark);
 
             return Ok();
         }
 
         [HttpPost("upload-cover-image")]
-        public async Task<ActionResult> UploadCoverImage(IFormFile file, Guid mangaId)
+        public async Task<ActionResult> UploadCoverImage([FromForm] UploadCoverImageModel model)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("File is Empty");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var fileBytes = await this.GetFileBytes(file);
-            _mangaService.UploadCoverImage(fileBytes, mangaId);
+            var fileBytes = await this.GetFileBytes(model.CoverImage);
+            _mangaService.UploadCoverImage(fileBytes, model.MangaId);
 
             return Ok();
         }
-
     }
 }

@@ -3,6 +3,7 @@ using BLL.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Infrastructure.Extensions;
+using WebAPI.Infrastructure.Models;
 
 namespace WebAPI.Controllers
 {
@@ -19,7 +20,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("get-manga-chapters")]
-        public ActionResult GetAllMangaChapters(Guid mangaId)
+        public ActionResult GetAllMangaChapters([FromQuery] Guid mangaId)
         {
             var chapters = _chapterService.GetAllMangaChapters(mangaId);
 
@@ -27,7 +28,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetById(Guid chapterId)
+        public ActionResult GetById([FromQuery] Guid chapterId)
         {
             var chapter = _chapterService.GetById(chapterId);
 
@@ -35,7 +36,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete(Guid chapterId)
+        public ActionResult Delete([FromQuery] Guid chapterId)
         {
             _chapterService.Delete(chapterId);
 
@@ -43,7 +44,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Apply(ChapterModel chapterModel)
+        public ActionResult Apply([FromBody] ChapterModel chapterModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -54,13 +55,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<ActionResult> UploadChapter(IFormFile file, Guid chapterId)
+        public async Task<ActionResult> UploadChapter([FromForm] UploadChapterModel model)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("File is Empty");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var fileBytes = await this.GetFileBytes(file);
-            _chapterService.UploadChapter(fileBytes, chapterId);
+            var fileBytes = await this.GetFileBytes(model.ChapterFile);
+            _chapterService.UploadChapter(fileBytes, model.ChapterId);
 
             return Ok();
         }

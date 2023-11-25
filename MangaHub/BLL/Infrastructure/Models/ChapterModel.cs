@@ -21,5 +21,8 @@ namespace BLL.Infrastructure.Models
         public DateTime CreatedOn { get; set; }
 
         public DateTime? LastUpdatedOn { get; set; }
+
+        [Required]
+        public Guid MangaId { get; set; }
     }
 }

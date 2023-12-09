@@ -49,10 +49,16 @@ namespace BLL.Services
             return mangaList;
         }
 
-        public MangaModel GetById(Guid mangaId)
+        public MangaModel GetById(Guid mangaId, int currentUserId)
         {
             var manga = _unitOfWork.Value.Mangas.Value.GetById(mangaId);
             var mangaModel = _mapper.Value.Map<MangaModel>(manga);
+
+            var currentUserMark = manga.Ratings
+                    .FirstOrDefault(x => x.UserId == currentUserId)
+                    ?.Mark;
+
+            mangaModel.CurrentUserMark = currentUserMark;
 
             return mangaModel;
         }

@@ -10,7 +10,7 @@ namespace BLL.Contracts
 
         IEnumerable<MangaListItem> GetAll(MangaFilter filter);
 
-        MangaModel GetById(Guid mangaId);
+        MangaModel GetById(Guid mangaId, int currentUserId);
 
         void Apply(MangaModel mangaModel);
 

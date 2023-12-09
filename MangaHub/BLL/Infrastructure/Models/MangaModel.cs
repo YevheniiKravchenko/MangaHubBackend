@@ -36,5 +36,7 @@ namespace BLL.Infrastructure.Models
         public int? UserId { get; set; }
 
         public double Rating { get; set; }
+
+        public double? CurrentUserMark { get; set; }
     }
 }

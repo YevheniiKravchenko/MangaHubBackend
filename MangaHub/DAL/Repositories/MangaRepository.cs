@@ -21,6 +21,7 @@ namespace DAL.Repositories
 
             _mangas = dbContext.Mangas;
             _ratings = dbContext.Ratings;
+            _users = dbContext.Users;
         }
 
         public void Apply(Manga manga)
@@ -99,6 +100,8 @@ namespace DAL.Repositories
                     MangaId = mangaId,
                     UserId = userId,
                 };
+
+                _ratings.Add(rating);
             }
 
             rating.Mark = (byte)mark;

@@ -39,7 +39,8 @@ namespace WebAPI.Controllers
         [HttpGet]
         public ActionResult GetById([FromQuery] Guid mangaId)
         {
-            var manga = _mangaService.GetById(mangaId);
+            var currentUserId = this.GetCurrentUserId();
+            var manga = _mangaService.GetById(mangaId, currentUserId);
 
             return Ok(manga);
         }

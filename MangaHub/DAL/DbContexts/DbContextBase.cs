@@ -23,7 +23,7 @@ namespace DAL.DbContexts
         public DbContextBase(DbContextOptions<DbContextBase> options)
             : base(options)
         {
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
         }
 
         public void Commit()

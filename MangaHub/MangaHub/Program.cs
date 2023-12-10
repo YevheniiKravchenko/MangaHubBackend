@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using WebAPI.Middlewares;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -130,6 +131,8 @@ var app = builder.Build();
 //}
 
 app.UseHttpsRedirection();
+
+app.UseErrorHandling();
 
 app.UseCors(MyAllowSpecificOrigins);
 

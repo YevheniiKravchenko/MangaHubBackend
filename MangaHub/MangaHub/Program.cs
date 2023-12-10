@@ -27,13 +27,14 @@ builder.Host.ConfigureAppConfiguration(config =>
     config.AddJsonFile(@$"{Path.GetFullPath(@"../")}/config.json", true);
 });
 
-var connectionModel = builder.Configuration.GetSection("Connection").Get<ConnectionModel>();
+var connectionModel = builder.Configuration.GetSection("Connection").Get<ConnectionModel>() ?? new ConnectionModel();
 
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? connectionModel.Host;
 var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? connectionModel.Database;
 var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? connectionModel.Password;
 
-var connection = string.Format(connectionModel.ConnectionString, dbHost, dbName, dbPassword);
+var connection = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") 
+    ?? string.Format(connectionModel.ConnectionString, dbHost, dbName, dbPassword);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<DbContextBase>(options => options.UseNpgsql(connection));

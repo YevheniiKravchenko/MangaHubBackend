@@ -39,7 +39,15 @@ var connection = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<DbContextBase>(options => options.UseNpgsql(connection));
 
-var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
+var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>()
+    ?? new AuthOptions
+    {
+        Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+        Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+        RefreshTokenLifetime = int.Parse(Environment.GetEnvironmentVariable("JWT_REFRESH_TOKEN_LIFETIME") ?? "0"),
+        Secret = Environment.GetEnvironmentVariable("JWT_SECRET"),
+        TokenLifetime = int.Parse(Environment.GetEnvironmentVariable("JWT_TOKEN_LIFETIME") ?? "0"),
+    };
 builder.Services.AddSingleton(authOptions);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

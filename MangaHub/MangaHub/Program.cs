@@ -24,7 +24,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
 builder.Host.ConfigureAppConfiguration(config =>
 {
-    config.AddJsonFile(@$"{Path.GetFullPath(@"../")}/config.json");
+    config.AddJsonFile(@$"{Path.GetFullPath(@"../")}/config.json", true);
 });
 
 var connectionModel = builder.Configuration.GetSection("Connection").Get<ConnectionModel>();

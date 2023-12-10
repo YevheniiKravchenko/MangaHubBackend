@@ -1,12 +1,13 @@
 ﻿using Common.Constants;
 using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BLL.Infrastructure.Models
 {
     public class MangaModel
     {
-        public Guid MangaId { get; set; }
+        public Guid MangaId { get; set; } = Guid.NewGuid();
 
         [Required]
         [MinLength(ValidationConstant.TitleMinLength)]

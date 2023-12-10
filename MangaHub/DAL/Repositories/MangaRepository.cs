@@ -37,10 +37,8 @@ namespace DAL.Repositories
                 return;
             }
 
-            dbManga = manga;
-            dbManga.LastUpdatedOn = DateTime.Now;
-
-            _mangas.Update(dbManga);
+            var mangaEntry = _dbContext.Entry(dbManga);
+            mangaEntry.CurrentValues.SetValues(manga);
             _dbContext.Commit();
         }
 

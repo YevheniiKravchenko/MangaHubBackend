@@ -37,10 +37,8 @@ namespace DAL.Repositories
                 return;
             }
 
-            dbChapter = chapter;
-            dbChapter.LastUpdatedOn = DateTime.Now;
-
-            _chapters.Update(chapter);
+            var chapterEntry = _dbContext.Entry(dbChapter);
+            chapterEntry.CurrentValues.SetValues(chapter);
             _dbContext.Commit();
         }
 

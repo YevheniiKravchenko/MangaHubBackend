@@ -20,6 +20,7 @@ namespace WebAPI.Controllers
             _mangaService = mangaService;
         }
 
+        [AllowAnonymous]
         [HttpGet("get-all")]
         public ActionResult GetAll()
         {
@@ -28,6 +29,7 @@ namespace WebAPI.Controllers
             return Ok(mangas);
         }
 
+        [AllowAnonymous]
         [HttpGet("get-all-filter")]
         public ActionResult GetAll([FromQuery] MangaFilter filter)
         {
@@ -36,6 +38,7 @@ namespace WebAPI.Controllers
             return Ok(mangas);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult GetById([FromQuery] Guid mangaId)
         {

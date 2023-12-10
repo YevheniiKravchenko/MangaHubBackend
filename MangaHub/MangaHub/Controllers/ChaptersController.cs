@@ -19,6 +19,7 @@ namespace WebAPI.Controllers
             _chapterService = chapterService;
         }
 
+        [AllowAnonymous]
         [HttpGet("get-manga-chapters")]
         public ActionResult GetAllMangaChapters([FromQuery] Guid mangaId)
         {
@@ -27,6 +28,7 @@ namespace WebAPI.Controllers
             return Ok(chapters);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult GetById([FromQuery] Guid chapterId)
         {

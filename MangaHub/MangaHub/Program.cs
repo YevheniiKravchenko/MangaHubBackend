@@ -66,7 +66,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-var emailCreds = builder.Configuration.GetSection("EmailCreds").Get<EmailCreds>();
+var emailCreds = builder.Configuration.GetSection("EmailCreds").Get<EmailCreds>()
+    ?? new EmailCreds
+    {
+        EmailHost = Environment.GetEnvironmentVariable("EMAIL_HOST"),
+        EmailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD"),
+        ResetPasswordUrl = Environment.GetEnvironmentVariable("EMAIL_RESET_PASSWORD_URL"),
+        EmailUserName = Environment.GetEnvironmentVariable("EMAIL_USERNAME"),
+    };
 builder.Services.AddSingleton(emailCreds);
 
 #region Init Mapper Profiles

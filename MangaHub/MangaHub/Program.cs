@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using WebAPI.BackgroundServices;
 using WebAPI.Middlewares;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -85,7 +86,8 @@ var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddMaps(new[] {
         "DAL",
-        "BLL"
+        "BLL",
+        "WebAPI"
     });
 });
 
@@ -110,7 +112,6 @@ options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
 options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-
 builder.Services.AddCors(option =>
 {
     option.AddPolicy(name: MyAllowSpecificOrigins, builder =>
@@ -120,6 +121,8 @@ builder.Services.AddCors(option =>
             .AllowAnyHeader();
     });
 });
+
+builder.Services.AddMigrationService();
 
 var app = builder.Build();
 

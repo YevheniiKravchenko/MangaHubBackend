@@ -3,6 +3,7 @@ using System;
 using DAL.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DbContextBase))]
-    partial class DbContextBaseModelSnapshot : ModelSnapshot
+    [Migration("20231212143537_Add Comments")]
+    partial class AddComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,14 +73,11 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("MangaId")
+                    b.Property<Guid>("MangaId")
                         .HasColumnType("uuid");
 
                     b.Property<int?>("ParentCommentId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -240,7 +239,7 @@ namespace DAL.Migrations
                             Login = "Admin",
                             PasswordHash = "$2a$10$WkrWKFdubfRwcY4MjdFELui7Dh8r3ykAvDYOQPvQud0vPlxFHVen.",
                             PasswordSalt = "d!W2~4~zI{wq:l<p",
-                            RegistrationDate = new DateTime(2023, 12, 12, 17, 12, 50, 401, DateTimeKind.Utc).AddTicks(2911)
+                            RegistrationDate = new DateTime(2023, 12, 12, 14, 35, 37, 41, DateTimeKind.Utc).AddTicks(3959)
                         });
                 });
 
@@ -315,7 +314,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Domain.Models.Manga", "Manga")
                         .WithMany("Comments")
-                        .HasForeignKey("MangaId");
+                        .HasForeignKey("MangaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Models.Comment", "ParentComment")
                         .WithMany("ChildComments")

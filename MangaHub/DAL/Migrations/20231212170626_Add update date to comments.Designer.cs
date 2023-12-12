@@ -3,6 +3,7 @@ using System;
 using DAL.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DbContextBase))]
-    partial class DbContextBaseModelSnapshot : ModelSnapshot
+    [Migration("20231212170626_Add update date to comments")]
+    partial class Addupdatedatetocomments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,6 +74,7 @@ namespace DAL.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid?>("MangaId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<int?>("ParentCommentId")
@@ -240,7 +243,7 @@ namespace DAL.Migrations
                             Login = "Admin",
                             PasswordHash = "$2a$10$WkrWKFdubfRwcY4MjdFELui7Dh8r3ykAvDYOQPvQud0vPlxFHVen.",
                             PasswordSalt = "d!W2~4~zI{wq:l<p",
-                            RegistrationDate = new DateTime(2023, 12, 12, 17, 12, 50, 401, DateTimeKind.Utc).AddTicks(2911)
+                            RegistrationDate = new DateTime(2023, 12, 12, 17, 6, 26, 181, DateTimeKind.Utc).AddTicks(6770)
                         });
                 });
 
@@ -315,7 +318,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Domain.Models.Manga", "Manga")
                         .WithMany("Comments")
-                        .HasForeignKey("MangaId");
+                        .HasForeignKey("MangaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Models.Comment", "ParentComment")
                         .WithMany("ChildComments")

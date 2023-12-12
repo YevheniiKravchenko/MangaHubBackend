@@ -26,5 +26,12 @@
         public const int TitleMaxLength = 128;
 
         #endregion
+
+        #region Comment
+
+        public const int CommentMinLength = 0;
+        public const int CommentMaxLength = 200;
+
+        #endregion
     }
 }

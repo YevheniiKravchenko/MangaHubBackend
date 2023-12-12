@@ -7,10 +7,10 @@
     "RefreshTokenLifetime": "36000"
   },
   "Connection": {
-    "Host": "localhost",
+    "Host": "ep-dry-recipe-37406402.us-east-2.aws.neon.tech",
     "Database": "MangaHub",
-    "Password": "Pas#123456",
-    "ConnectionString": "Host={0}; Database={1}; Username=postgres; Password={2}"
+    "Password": "0CJeWdrjOt7k",
+    "ConnectionString": "Host={0}; Database={1}; User Id=yevhenii.zhuravel; Password={2}"
   },
   "EmailCreds": {
     "EmailHost": "smtp.gmail.com",

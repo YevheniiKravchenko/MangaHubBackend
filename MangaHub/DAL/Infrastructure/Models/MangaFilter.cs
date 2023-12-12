@@ -17,7 +17,7 @@ namespace DAL.Infrastructure.Models
 
         public override IQueryable<Manga> Filter(DbSet<Manga> mangas)
         {
-            var query = mangas.AsQueryable();
+            var query = base.Filter(mangas);
 
             if (!SearchQuery.IsNullOrEmpty())
             {

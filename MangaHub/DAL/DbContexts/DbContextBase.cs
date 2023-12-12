@@ -16,14 +16,15 @@ namespace DAL.DbContexts
 
         public DbSet<Manga> Mangas { get; set; } = null!;
 
-        public DbSet<Chapter> Chapters { get; set; }
+        public DbSet<Chapter> Chapters { get; set; } = null!;
 
         public DbSet<Rating> Ratings { get; set; } = null!;
+
+        public DbSet<Comment> Comments { get; set; } = null!;
 
         public DbContextBase(DbContextOptions<DbContextBase> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public void Commit()

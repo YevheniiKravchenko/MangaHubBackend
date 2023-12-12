@@ -51,6 +51,14 @@ namespace BLL.Infrastructure.Automapper
                 .ReverseMap();
 
             #endregion
+
+            #region Comment
+
+            CreateMap<Comment, CommentModel>().ReverseMap();
+            CreateMap<Comment, NewCommentModel>().ReverseMap();
+            CreateMap<Comment, UpdateCommentModel>().ReverseMap();
+
+            #endregion
         }
     }
 }

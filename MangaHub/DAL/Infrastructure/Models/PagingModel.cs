@@ -1,4 +1,6 @@
-﻿namespace DAL.Infrastructure.Models
+﻿using System.Text.Json.Serialization;
+
+namespace DAL.Infrastructure.Models
 {
     public class PagingModel
     {

@@ -44,6 +44,9 @@ namespace Domain.Models
         [JsonIgnore]
         public User User { get; set; }
 
+        [JsonIgnore]
+        public ICollection<Comment> Comments { get; set; }
+
         #endregion
     }
 }

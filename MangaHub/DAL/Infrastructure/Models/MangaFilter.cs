@@ -7,7 +7,7 @@ namespace DAL.Infrastructure.Models
 {
     public class MangaFilter : FilterBase<Manga>
     {
-        public string SearchQuery { get; set; }
+        public string? SearchQuery { get; set; } = string.Empty;
 
         public Genre? Genre { get; set; }
 

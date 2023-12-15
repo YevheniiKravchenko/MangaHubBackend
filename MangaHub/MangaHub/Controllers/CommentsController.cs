@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.Contracts;
 using BLL.Infrastructure.Models;
+using DAL.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -50,9 +51,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult GetMangaComments([FromQuery]Guid mangaId)
+        public IActionResult GetMangaComments([FromQuery]CommentFilter commentFilter)
         {
-            return Ok(_commentService.GetMangaComments(mangaId));
+            return Ok(_commentService.GetMangaComments(commentFilter));
         }
     }
 }

@@ -2,6 +2,7 @@
 using BLL.Contracts;
 using BLL.Infrastructure.Models;
 using DAL.Contracts;
+using DAL.Infrastructure.Models;
 using Domain.Models;
 
 namespace BLL.Services
@@ -35,9 +36,9 @@ namespace BLL.Services
             return _commentRepository.Delete(commentId);
         }
 
-        public IEnumerable<CommentModel> GetMangaComments(Guid mangaId)
+        public IEnumerable<CommentModel> GetMangaComments(CommentFilter commentFilter)
         {
-            return _mapper.Map<IEnumerable<CommentModel>>(_commentRepository.GetMangaComments(mangaId));
+            return _mapper.Map<IEnumerable<CommentModel>>(_commentRepository.GetMangaComments(commentFilter));
         }
 
         public CommentModel Update(UpdateCommentModel newComment)

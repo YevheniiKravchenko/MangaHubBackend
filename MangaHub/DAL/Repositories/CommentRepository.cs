@@ -1,5 +1,7 @@
 ﻿using DAL.Contracts;
 using DAL.DbContexts;
+using DAL.Infrastructure.Extensions;
+using DAL.Infrastructure.Models;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,11 +69,13 @@ namespace DAL.Repositories
                 .FirstOrDefault(c => c.Id == commentId);
         }
 
-        public IEnumerable<Comment> GetMangaComments(Guid mangaId)
+        public IEnumerable<Comment> GetMangaComments(CommentFilter commentFilter)
         {
             return _comments
                 .Include(c => c.ChildComments)
-                .Where(c => c.MangaId == mangaId)
+                .Where(c => c.MangaId == commentFilter.MangaId)
+                .OrderBy(c => c.CreatedDate)
+                .GetPage(commentFilter.PagingModel)
                 .ToList();
         }
 

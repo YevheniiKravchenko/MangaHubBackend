@@ -1,4 +1,5 @@
 ﻿using BLL.Infrastructure.Models;
+using DAL.Infrastructure.Models;
 
 namespace BLL.Contracts
 {
@@ -7,6 +8,6 @@ namespace BLL.Contracts
         CommentModel Create(NewCommentModel newComment);
         CommentModel Update(UpdateCommentModel newComment);
         int Delete(int commentId);
-        IEnumerable<CommentModel> GetMangaComments(Guid mangaId);
+        IEnumerable<CommentModel> GetMangaComments(CommentFilter commentFilter);
     }
 }

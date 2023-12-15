@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using DAL.Infrastructure.Models;
+using Domain.Models;
 
 namespace DAL.Contracts
 {
@@ -7,7 +8,7 @@ namespace DAL.Contracts
         Comment Create(Comment newComment);
         int Delete(int commentId);
         Comment? GetById(int commentId);
-        IEnumerable<Comment> GetMangaComments(Guid mangaId);
+        IEnumerable<Comment> GetMangaComments(CommentFilter commentFilter);
         Comment Update(Comment newComment);
     }
 }

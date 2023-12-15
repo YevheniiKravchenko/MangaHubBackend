@@ -66,6 +66,7 @@ namespace DAL.Repositories
         {
             return _comments
                 .Include(c => c.ChildComments)
+                .Include(c => c.User)
                 .FirstOrDefault(c => c.Id == commentId);
         }
 
@@ -73,6 +74,7 @@ namespace DAL.Repositories
         {
             return _comments
                 .Include(c => c.ChildComments)
+                .Include(c => c.User)
                 .Where(c => c.MangaId == commentFilter.MangaId)
                 .OrderBy(c => c.CreatedDate)
                 .GetPage(commentFilter.PagingModel)

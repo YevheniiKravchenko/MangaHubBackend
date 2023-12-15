@@ -7,6 +7,7 @@ namespace BLL.Infrastructure.Models
         public int Id { get; set; }
         public string Body { get; set; } = string.Empty;
         public int UserId { get; set; }
+        public string Login { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; }
         public ICollection<CommentModel> ChildComments { get; set; } = new List<CommentModel>();
     }

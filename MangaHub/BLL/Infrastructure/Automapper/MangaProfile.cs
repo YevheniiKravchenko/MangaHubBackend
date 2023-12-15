@@ -54,7 +54,9 @@ namespace BLL.Infrastructure.Automapper
 
             #region Comment
 
-            CreateMap<Comment, CommentModel>().ReverseMap();
+            CreateMap<Comment, CommentModel>()
+                .ForMember(cm => cm.Login, config => config.MapFrom(c => c.User.Login))
+                .ReverseMap();
             CreateMap<Comment, NewCommentModel>().ReverseMap();
             CreateMap<Comment, UpdateCommentModel>().ReverseMap();
 
